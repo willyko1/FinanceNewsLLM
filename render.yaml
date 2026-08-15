@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: signaldesk
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: AI_PROVIDER
+        value: groq
+      - key: AI_MODEL
+        value: openai/gpt-oss-120b
+      - key: GROQ_API_KEY
+        sync: false
+      - key: SEC_USER_AGENT
+        sync: false
+      - key: REQUESTS_PER_DAY_PER_IP
+        value: "3"
+      - key: GLOBAL_REQUESTS_PER_DAY
+        value: "100"
+      - key: MAX_TOOL_ROUNDS
+        value: "4"
+      - key: MAX_TOOL_CALLS
+        value: "12"

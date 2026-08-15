@@ -1,0 +1,24 @@
+{
+  "answer": "Apple’s most recent quoted price in this saved example was $302.25 per share as of August 12, 2026 at 20:00 UTC [S1].\n\n## What the evidence says\n- The MCP market snapshot identified Apple as AAPL on Nasdaq and returned delayed end-of-day pricing [S1].\n- The research agent preserved the retrieval timestamp and source URL instead of relying on model memory.\n\n## Risks & what to watch\n- This is a dated demonstration, not a live quote. Use a live investigation for current information.\n- Market prices can change rapidly around earnings, macroeconomic releases, and company announcements.\n\nResearch only — not personalized investment advice.",
+  "sources": [
+    {
+      "id": "S1",
+      "title": "AAPL market data — saved demonstration",
+      "url": "https://finance.yahoo.com/quote/AAPL",
+      "publisher": "Yahoo Finance",
+      "published_at": "2026-08-12T20:00:01+00:00"
+    }
+  ],
+  "trace": [
+    {
+      "name": "get_market_snapshot",
+      "arguments": {"ticker": "AAPL"},
+      "status": "complete",
+      "source_ids": ["S1"]
+    }
+  ],
+  "model": "openai/gpt-oss-120b",
+  "provider": "groq",
+  "generated_at": "2026-08-13T08:24:18.992097+00:00",
+  "demo": true
+}
