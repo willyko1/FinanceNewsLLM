@@ -23,7 +23,7 @@ DEMO_PATH = Path(__file__).parent / "demo" / "sample_research.json"
 DAY_SECONDS = 86_400
 
 app = FastAPI(
-    title="SignalDesk API",
+    title="Matt API",
     description="Evidence-first financial research using an MCP tool server.",
     version="1.0.0",
 )
@@ -66,7 +66,7 @@ class DailyRateLimiter:
                 raise HTTPException(
                     status_code=429,
                     detail=(
-                        "SignalDesk reached today's shared demo quota. "
+                        "Matt reached today's shared demo quota. "
                         "The zero-cost example remains available."
                     ),
                     headers={"Retry-After": str(retry_after)},
@@ -167,12 +167,12 @@ async def research(request: ResearchRequest, http_request: Request, response: Re
         expected = "GROQ_API_KEY" if settings.ai_provider == "groq" else "OPENAI_API_KEY"
         raise HTTPException(
             status_code=503,
-            detail=f"Add {expected} to .env, then restart SignalDesk.",
+            detail=f"Add {expected} to .env, then restart Matt.",
         )
     cache_key = " ".join(request.question.lower().split())
     cached = response_cache.get(cache_key)
     if cached and time.time() - cached[0] < settings.response_cache_seconds:
-        response.headers["X-SignalDesk-Cache"] = "HIT"
+        response.headers["X-Matt-Cache"] = "HIT"
         return cached[1]
 
     remaining, global_remaining = await rate_limiter.acquire(_client_id(http_request))
@@ -185,7 +185,7 @@ async def research(request: ResearchRequest, http_request: Request, response: Re
                 timeout=settings.research_timeout,
             )
         response_cache[cache_key] = (time.time(), result)
-        response.headers["X-SignalDesk-Cache"] = "MISS"
+        response.headers["X-Matt-Cache"] = "MISS"
         return result
     except TimeoutError as exc:
         raise HTTPException(

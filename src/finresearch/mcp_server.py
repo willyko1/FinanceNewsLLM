@@ -10,7 +10,7 @@ from .sources import (
 from .sources import search_finance_news as search_news_source
 
 mcp = FastMCP(
-    "SignalDesk Financial Data",
+    "Matt Financial Data",
     instructions="Read-only, timestamped market, news, and SEC evidence for financial research.",
 )
 

@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "signaldesk"
+name = "matt-finance"
 version = "1.0.0"
 description = "An evidence-first financial research agent powered by MCP"
 readme = "README.md"
@@ -25,8 +25,8 @@ dev = [
 ]
 
 [project.scripts]
-signaldesk = "finresearch.web:run"
-signaldesk-mcp = "finresearch.mcp_server:main"
+matt = "finresearch.web:run"
+matt-mcp = "finresearch.mcp_server:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/finresearch"]

@@ -15,7 +15,7 @@ class Settings:
     openai_api_key: str | None = os.getenv("OPENAI_API_KEY")
     groq_api_key: str | None = os.getenv("GROQ_API_KEY")
     sec_user_agent: str = os.getenv(
-        "SEC_USER_AGENT", "SignalDesk portfolio project research@example.com"
+        "SEC_USER_AGENT", "Matt financial research research@example.com"
     )
     request_timeout: float = float(os.getenv("REQUEST_TIMEOUT_SECONDS", "20"))
     research_timeout: float = float(os.getenv("RESEARCH_TIMEOUT_SECONDS", "90"))

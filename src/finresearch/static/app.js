@@ -13,7 +13,7 @@ const escapeHtml = (value) => String(value ?? "").replace(/[&<>'"]/g, (char) => 
 function renderMarkdown(markdown) {
   const safe = escapeHtml(markdown);
   const lines = safe.split("\n");
-  let html = '<div class="answer-kicker">SignalDesk analysis</div>';
+  let html = '<div class="answer-kicker">Matt’s brief</div>';
   let inList = false;
   for (const raw of lines) {
     const line = raw.trim();
@@ -83,7 +83,7 @@ async function runResearch(event) {
     progressBar.style.width = "100%";
     renderResult(payload);
   } catch (error) {
-    errorBox.innerHTML = `<strong>Couldn’t complete this investigation.</strong><br>${escapeHtml(error.message)}`;
+    errorBox.innerHTML = `<strong>Matt couldn’t finish this research.</strong><br>${escapeHtml(error.message)}`;
     errorBox.classList.remove("hidden");
   } finally {
     clearInterval(timer);
@@ -122,7 +122,7 @@ fetch("/api/health").then((res) => res.json()).then((data) => {
   const status = document.querySelector("#system-status");
   if (data.mcp === "connected") {
     status.classList.add("ready");
-    status.innerHTML = `<span class="status-dot"></span>${data.tools.length} MCP tools online`;
+    status.innerHTML = `<span class="status-dot"></span>${data.tools.length} data tools connected`;
   } else {
     status.classList.add("error");
     status.innerHTML = '<span class="status-dot"></span>MCP unavailable';

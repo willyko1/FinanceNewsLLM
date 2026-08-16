@@ -46,7 +46,7 @@ async def market_snapshot(ticker: str) -> dict[str, Any]:
         response = await client.get(
             YAHOO_CHART_URL.format(ticker=symbol),
             params=params,
-            headers={"User-Agent": "Mozilla/5.0 SignalDesk/1.0"},
+            headers={"User-Agent": "Mozilla/5.0 Matt/1.0"},
         )
         response.raise_for_status()
     try:
@@ -105,7 +105,7 @@ async def search_finance_news(query: str, days: int = 7, limit: int = 8) -> dict
         response = await client.get(
             GOOGLE_NEWS_URL,
             params=params,
-            headers={"User-Agent": "Mozilla/5.0 SignalDesk/1.0"},
+            headers={"User-Agent": "Mozilla/5.0 Matt/1.0"},
         )
         response.raise_for_status()
 

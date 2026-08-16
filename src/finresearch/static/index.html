@@ -3,52 +3,52 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Evidence-first financial research powered by MCP." />
-    <title>SignalDesk — Financial research, with receipts</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <meta name="description" content="Matt researches public companies using current market data, reporting, and SEC records." />
+    <title>Matt — company research</title>
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
-    <div class="noise"></div>
     <header class="topbar">
-      <a class="brand" href="/" aria-label="SignalDesk home">
-        <span class="brand-mark">S</span>
-        <span>SignalDesk</span>
+      <a class="brand" href="/" aria-label="Matt home">
+        <span class="brand-mark">M</span>
+        <span>Matt</span>
       </a>
-      <div class="status" id="system-status"><span class="status-dot"></span>Connecting to MCP</div>
+      <div class="status" id="system-status"><span class="status-dot"></span>Checking data tools</div>
     </header>
 
     <main>
-      <section class="hero">
-        <div class="eyebrow"><span>●</span> EVIDENCE-FIRST FINANCIAL RESEARCH</div>
-        <h1>Market answers.<br /><em>With receipts.</em></h1>
-        <p class="hero-copy">SignalDesk investigates live market data, recent reporting, and SEC filings—then shows exactly how it reached its answer.</p>
+      <section class="intro">
+        <div class="intro-copy">
+          <p class="overline">Public-company research</p>
+          <h1>What are you looking into?</h1>
+          <p class="lede">Ask Matt about a company, a price move, or a filing. He checks current sources before giving you a short, cited brief.</p>
+          <p class="fine-print">Research only. Not personalized investment advice.</p>
+        </div>
 
-        <form class="research-box" id="research-form">
-          <label for="question">Ask a research question</label>
-          <textarea id="question" name="question" rows="3" maxlength="1000" placeholder="Why did NVDA move this week, and what should investors watch next?" required></textarea>
-          <div class="research-actions">
-            <span class="hint"><kbd>⌘</kbd><kbd>↵</kbd> to research</span>
-            <button type="submit" id="submit-button">
-              <span>Investigate</span><span aria-hidden="true">↗</span>
-            </button>
+        <div class="ask-area">
+          <form class="research-box" id="research-form">
+            <label for="question">Your question</label>
+            <textarea id="question" name="question" rows="5" maxlength="1000" placeholder="What changed in Nvidia's latest results, and what should I watch next?" required></textarea>
+            <div class="research-actions">
+              <span class="hint"><kbd>⌘</kbd><kbd>↵</kbd> to submit</span>
+              <button type="submit" id="submit-button">Research</button>
+            </div>
+          </form>
+
+          <div class="examples" aria-label="Example questions">
+            <span>Try</span>
+            <button type="button" data-question="Why did NVDA move this week, and what are the key risks?">Nvidia this week</button>
+            <button type="button" data-question="Compare the latest fundamentals and near-term catalysts for MSFT and GOOGL.">Microsoft vs Google</button>
+            <button type="button" data-question="What do Tesla's latest SEC filings reveal about current business risks?">Tesla filings</button>
+            <button type="button" class="demo-button" id="demo-button">Saved example</button>
           </div>
-        </form>
-
-        <div class="prompts" aria-label="Example questions">
-          <button type="button" data-question="Why did NVDA move this week, and what are the key risks?">NVDA weekly move</button>
-          <button type="button" data-question="Compare the latest fundamentals and near-term catalysts for MSFT and GOOGL.">MSFT vs GOOGL</button>
-          <button type="button" data-question="What do Tesla's latest SEC filings reveal about current business risks?">Tesla filing risks</button>
-          <button type="button" class="demo-button" id="demo-button">View zero-cost example</button>
         </div>
       </section>
 
       <section class="workspace hidden" id="workspace" aria-live="polite">
         <div class="workspace-heading">
           <div>
-            <span class="section-number">01</span>
+            <p class="overline">Result</p>
             <h2>Research brief</h2>
           </div>
           <span class="timestamp" id="timestamp"></span>
@@ -57,8 +57,8 @@
         <div class="research-grid">
           <article class="report-panel">
             <div class="loading-state" id="loading-state">
-              <div class="pulse-ring"><span></span></div>
-              <p id="loading-label">Planning the investigation…</p>
+              <span class="loader" aria-hidden="true"></span>
+              <p id="loading-label">Planning the research…</p>
               <div class="progress"><i id="progress-bar"></i></div>
             </div>
             <div class="answer hidden" id="answer"></div>
@@ -66,35 +66,35 @@
           </article>
 
           <aside class="evidence-panel">
-            <div class="panel-title"><span>Research trace</span><span class="mono" id="tool-count">0 calls</span></div>
+            <div class="panel-title"><span>Tool activity</span><span class="mono" id="tool-count">0 calls</span></div>
             <ol class="trace-list" id="trace-list">
-              <li class="empty-trace">Tool activity will appear here.</li>
+              <li class="empty-trace">Tools used for the answer will appear here.</li>
             </ol>
             <div class="panel-title sources-title"><span>Sources</span><span class="mono" id="source-count">0 cited</span></div>
             <div class="source-list" id="source-list">
-              <p class="empty-sources">Primary filings and current reporting will be linked here.</p>
+              <p class="empty-sources">Linked evidence will appear here.</p>
             </div>
           </aside>
         </div>
       </section>
 
       <section class="method">
-        <div class="method-intro">
-          <span class="section-number">02</span>
-          <h2>Not another<br />black-box chatbot.</h2>
+        <div class="method-heading">
+          <p class="overline">Under the hood</p>
+          <h2>What Matt checks</h2>
         </div>
-        <div class="method-cards">
-          <article><span class="card-index">A</span><h3>Live evidence</h3><p>Market prices, reporting, and regulatory filings are fetched at question time.</p></article>
-          <article><span class="card-index">B</span><h3>Visible reasoning trail</h3><p>Every MCP tool call and every source used in the final brief stays inspectable.</p></article>
-          <article><span class="card-index">C</span><h3>Calibrated conclusions</h3><p>Facts, interpretation, uncertainty, and conflicting evidence remain clearly separated.</p></article>
+        <div class="method-list">
+          <article><span>01</span><h3>Market data</h3><p>Latest available price, exchange, timestamp, and recent movement.</p></article>
+          <article><span>02</span><h3>Reporting</h3><p>Recent coverage with publisher names, dates, and links to the original articles.</p></article>
+          <article><span>03</span><h3>SEC records</h3><p>Company filings and commonly reported fundamentals from EDGAR.</p></article>
         </div>
       </section>
     </main>
 
     <footer>
-      <span>SignalDesk / v1.0</span>
-      <span>Research only — not personalized investment advice.</span>
-      <a href="/docs">API docs ↗</a>
+      <span>Matt</span>
+      <span>Market data may be delayed.</span>
+      <a href="/docs">API documentation</a>
     </footer>
     <script src="/static/app.js" defer></script>
   </body>

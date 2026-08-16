@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: signaldesk
+    name: matt
     runtime: docker
     plan: free
     healthCheckPath: /api/health
