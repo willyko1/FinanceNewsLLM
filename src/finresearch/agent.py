@@ -32,6 +32,12 @@ Answer format:
 4. End with: "Research only — not personalized investment advice."
 """.strip()
 
+FINAL_SYNTHESIS_PROMPT = """
+Tool collection is complete. Produce the final answer now using only the evidence already in the
+conversation. Do not request or call any more tools. If the available evidence is incomplete, say
+so explicitly instead of inventing facts. Preserve the required answer format and citations.
+""".strip()
+
 
 @dataclass
 class Source:
@@ -85,6 +91,21 @@ class ResearchAgent:
         async with finance_mcp_client() as mcp:
             return await self._run(question, mcp)
 
+    def _result(
+        self,
+        answer: str,
+        sources: list[Source],
+        traces: list[ToolTrace],
+    ) -> dict[str, Any]:
+        return {
+            "answer": _normalize_citations(answer),
+            "sources": [source.__dict__ for source in sources],
+            "trace": [trace.__dict__ for trace in traces],
+            "model": self.model,
+            "generated_at": datetime.now(UTC).isoformat(),
+            "provider": self.provider,
+        }
+
     async def _run(self, question: str, mcp: MCPFinanceClient) -> dict[str, Any]:
         tools = await mcp.openai_tools()
         input_items: list[Any] = [{"role": "user", "content": question}]
@@ -103,14 +124,7 @@ class ResearchAgent:
             calls = [item for item in response.output if item.type == "function_call"]
             input_items.extend(response.output)
             if not calls:
-                return {
-                    "answer": _normalize_citations(response.output_text),
-                    "sources": [source.__dict__ for source in sources],
-                    "trace": [trace.__dict__ for trace in traces],
-                    "model": self.model,
-                    "generated_at": datetime.now(UTC).isoformat(),
-                    "provider": self.provider,
-                }
+                return self._result(response.output_text, sources, traces)
 
             for call in calls:
                 if len(traces) >= settings.max_tool_calls:
@@ -154,6 +168,14 @@ class ResearchAgent:
                         "output": json.dumps(payload, default=str),
                     }
                 )
-        raise RuntimeError(
-            f"Research exceeded the maximum of {settings.max_tool_rounds} tool rounds"
+
+        # Some models keep asking for more tools even after enough evidence has been collected.
+        # A final tools-disabled pass converts that evidence into an answer instead of surfacing a
+        # budget-limit error to the user.
+        final_response = await self.client.responses.create(
+            model=self.model,
+            instructions=f"{SYSTEM_PROMPT}\n\n{FINAL_SYNTHESIS_PROMPT}",
+            input=input_items,
+            reasoning={"effort": "low"},
         )
+        return self._result(final_response.output_text, sources, traces)
