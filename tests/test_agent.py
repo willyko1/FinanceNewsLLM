@@ -72,4 +72,7 @@ async def test_tool_round_limit_forces_final_synthesis(monkeypatch):
     assert len(fake_responses.calls) == 3
     assert "tools" in fake_responses.calls[0]
     assert "tools" not in fake_responses.calls[-1]
-    assert "Do not request or call any more tools" in fake_responses.calls[-1]["instructions"]
+    assert "Do not request or call tools" in fake_responses.calls[-1]["instructions"]
+    assert len(fake_responses.calls[-1]["input"]) == 1
+    assert "Original question:" in fake_responses.calls[-1]["input"][0]["content"]
+    assert "AAPL market data" in fake_responses.calls[-1]["input"][0]["content"]

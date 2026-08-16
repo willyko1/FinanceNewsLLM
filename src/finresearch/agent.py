@@ -33,9 +33,22 @@ Answer format:
 """.strip()
 
 FINAL_SYNTHESIS_PROMPT = """
-Tool collection is complete. Produce the final answer now using only the evidence already in the
-conversation. Do not request or call any more tools. If the available evidence is incomplete, say
-so explicitly instead of inventing facts. Preserve the required answer format and citations.
+You are SignalDesk, an evidence-first financial research analyst. The tool-collection phase is
+complete. Answer the original question using only the collected evidence supplied in the user
+message. Do not request or call tools. If the evidence is incomplete, say so instead of inventing
+facts.
+
+Evidence rules:
+- Cite every current, numerical, or company-specific factual claim with an available [S#].
+- Only cite source IDs present in the collected evidence.
+- Distinguish reported facts from inference and state when price data may be delayed.
+- Do not issue personalized buy/sell instructions or predict returns.
+
+Answer format:
+1. A direct 2-3 sentence answer.
+2. "What the evidence says" with compact bullets.
+3. "Risks & what to watch" with compact bullets.
+4. End with: "Research only — not personalized investment advice."
 """.strip()
 
 
@@ -112,6 +125,7 @@ class ResearchAgent:
         traces: list[ToolTrace] = []
         sources: list[Source] = []
         source_by_url: dict[str, str] = {}
+        collected_evidence: list[dict[str, Any]] = []
 
         for _ in range(settings.max_tool_rounds):
             response = await self.client.responses.create(
@@ -161,6 +175,13 @@ class ResearchAgent:
                     trace.source_ids.append(source_id)
                 traces.append(trace)
                 payload["citation_ids"] = trace.source_ids
+                collected_evidence.append(
+                    {
+                        "tool": call.name,
+                        "arguments": arguments,
+                        "result": payload,
+                    }
+                )
                 input_items.append(
                     {
                         "type": "function_call_output",
@@ -170,12 +191,20 @@ class ResearchAgent:
                 )
 
         # Some models keep asking for more tools even after enough evidence has been collected.
-        # A final tools-disabled pass converts that evidence into an answer instead of surfacing a
-        # budget-limit error to the user.
+        # Use a fresh tools-disabled context: retaining function-call items can cause compatible
+        # providers to attempt another tool call even when no tools are available.
         final_response = await self.client.responses.create(
             model=self.model,
-            instructions=f"{SYSTEM_PROMPT}\n\n{FINAL_SYNTHESIS_PROMPT}",
-            input=input_items,
+            instructions=FINAL_SYNTHESIS_PROMPT,
+            input=[
+                {
+                    "role": "user",
+                    "content": (
+                        f"Original question:\n{question}\n\n"
+                        f"Collected evidence:\n{json.dumps(collected_evidence, default=str)}"
+                    ),
+                }
+            ],
             reasoning={"effort": "low"},
         )
         return self._result(final_response.output_text, sources, traces)
