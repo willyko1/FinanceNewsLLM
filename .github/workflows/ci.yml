@@ -16,3 +16,4 @@ jobs:
       - run: python -m pip install -e ".[dev]"
       - run: ruff check .
       - run: pytest -q
+      - run: python evals/run.py --validate

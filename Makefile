@@ -1,4 +1,4 @@
-.PHONY: install dev test lint eval
+.PHONY: install dev test lint eval eval-validate
 
 install:
 	python -m pip install -e ".[dev]"
@@ -14,3 +14,6 @@ lint:
 
 eval:
 	python evals/run.py
+
+eval-validate:
+	python evals/run.py --validate
