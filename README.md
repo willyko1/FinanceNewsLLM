@@ -8,6 +8,11 @@ Matt is a financial research assistant that checks live market data, recent repo
 and company fundamentals before answering. Every brief includes its source links and the MCP tool
 trace used to produce it.
 
+**Why I built it:** Matt started as a simple RAG prototype for summarizing financial news. I found
+that news retrieval alone was not enough for questions involving current prices, SEC filings, or
+company-reported financials, so I rebuilt it around an MCP-based research agent that gathers
+evidence from multiple sources before answering.
+
 **Live app:** [signaldesk-a8gf.onrender.com](https://signaldesk-a8gf.onrender.com)
 
 Matt is a research tool, not a trading system. It does not execute trades or provide personalized
