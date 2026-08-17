@@ -2,19 +2,22 @@
   {
     "id": "single_company_move",
     "question": "Why did NVDA move this week, and what are the key risks?",
-    "requires_tools": ["get_market_snapshot", "search_finance_news"],
-    "minimum_sources": 3
+    "required_tools": ["get_market_snapshot", "search_finance_news"],
+    "minimum_sources": 3,
+    "minimum_citations": 2
   },
   {
     "id": "filing_research",
     "question": "What do Tesla's latest SEC filings reveal about current business risks?",
-    "requires_tools": ["get_recent_sec_filings"],
-    "minimum_sources": 1
+    "required_tools": ["get_recent_sec_filings"],
+    "minimum_sources": 1,
+    "minimum_citations": 1
   },
   {
     "id": "comparison",
     "question": "Compare the latest fundamentals and near-term catalysts for MSFT and GOOGL.",
-    "requires_tools": ["get_company_facts", "search_finance_news"],
-    "minimum_sources": 4
+    "required_tools": ["get_company_facts", "search_finance_news"],
+    "minimum_sources": 4,
+    "minimum_citations": 3
   }
 ]

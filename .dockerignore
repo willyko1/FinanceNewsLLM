@@ -5,6 +5,11 @@ __pycache__
 .pytest_cache
 .ruff_cache
 *.pyc
-LLM.ipynb
 tests
 evals
+.github
+.vscode
+*.egg-info
+dist
+build
+.DS_Store
